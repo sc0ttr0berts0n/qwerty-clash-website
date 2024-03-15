@@ -1,12 +1,8 @@
-import { z, object, string, union, literal } from 'zod';
+import { z, object, union, literal } from 'zod';
+import { player } from './components';
 
 const leaderboardSchema = object({
-    player: object({
-        pcode: string().length(3),
-        name: string(),
-        color: string().length(7),
-        avatar: object({ url: string().url() }),
-    }),
+    player,
     outcome: union([literal('win'), literal('loss')]),
 });
 

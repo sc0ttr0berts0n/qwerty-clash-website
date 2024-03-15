@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { LeaderboardSchema } from '../schemas/leaderboard';
-import { queryPlayerRecord } from '../queries/queryPlayerRecord';
+import { queryPlayerRecords } from '../queries/playerRecords';
 import PlayerBar from './PlayerBar.vue';
 
 const data: any = ref(null);
@@ -40,7 +40,7 @@ const generateLeaderboard = async (data: LeaderboardSchema[]) => {
         .sort((a, b) => b.wins - a.wins);
 };
 
-queryPlayerRecord()
+queryPlayerRecords()
     .then(generateLeaderboard)
     .then((res) => {
         data.value = res;
@@ -74,3 +74,4 @@ h2 {
     gap: 0.5rem;
 }
 </style>
+../queries/playerRecords

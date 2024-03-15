@@ -15,6 +15,6 @@ const query = `
   outcome,
 }`;
 
-export const queryPlayerRecord = () => {
+export const queryPlayerRecords = () => {
     return useSanityClient.fetch<LeaderboardSchema[]>(query);
 };

@@ -31,7 +31,6 @@ nav {
 }
 main {
     width: 100%;
-    max-width: 600px;
     flex-grow: 1;
     display: flex;
     justify-content: center;
