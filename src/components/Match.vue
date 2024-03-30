@@ -51,18 +51,33 @@ defineProps<{ match: MatchSchema }>();
     container: match / inline-size;
     margin-top: 2rem;
 }
+.game-number {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 1rem 3rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+    border: 0.25rem solid white;
+}
 .players {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 50cqw;
+    grid-template-rows: 25cqw;
     width: 100%;
     max-width: 1280px;
-    background-color: yellow;
 }
 .player {
     position: relative;
-    // height: 25cqw;
-    // width: 25cqw;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5rem solid red;
+    &.team-a {
+        border-color: red;
+    }
+    &.team-b {
+        border-color: blue;
+    }
 }
 .name {
     position: absolute;

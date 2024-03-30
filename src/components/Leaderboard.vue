@@ -4,7 +4,7 @@ import { LeaderboardSchema } from '../schemas/leaderboard';
 import { queryPlayerRecords } from '../queries/playerRecords';
 import PlayerBar from './PlayerBar.vue';
 
-const data: any = ref(null);
+const data = ref<Partial<LeaderboardSchema>[] | null>(null);
 
 const generateLeaderboard = async (data: LeaderboardSchema[]) => {
     const map = new Map<

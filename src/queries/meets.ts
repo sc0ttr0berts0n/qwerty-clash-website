@@ -3,6 +3,7 @@ import { MeetSchema } from '../schemas/meet';
 
 const query = `
 *[_type=="meet"] {
+  _id,
   meet_time,
   match[]->{
     match_status,
