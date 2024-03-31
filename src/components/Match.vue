@@ -6,8 +6,10 @@ defineProps<{ match: MatchSchema }>();
 
 <template>
     <div class="match">
-        <div class="game-number">Game {{ match.game_number }}</div>
-        <div class="status">Match is {{ match.match_status }}</div>
+        <div class="header">
+            <div class="game-number">Game {{ match.game_number }}</div>
+            <div class="status">Match is {{ match.match_status }}</div>
+        </div>
         <div class="players">
             <div class="player team-a p1">
                 <img
@@ -15,7 +17,7 @@ defineProps<{ match: MatchSchema }>();
                     :src="match.team_a[0].avatar.url"
                     :alt="`${match.team_a[0].name}'s Avatar`"
                 />
-                <div class="name">{{ match.team_a[0].pcode }}</div>
+                <div class="name">{{ match.team_a[0].name }}</div>
             </div>
             <div class="player team-a p2">
                 <img
@@ -23,15 +25,16 @@ defineProps<{ match: MatchSchema }>();
                     :src="match.team_a[1].avatar.url"
                     :alt="`${match.team_a[1].name}'s Avatar`"
                 />
-                <div class="name">{{ match.team_a[1].pcode }}</div>
+                <div class="name">{{ match.team_a[1].name }}</div>
             </div>
+            <div class="vs">VS</div>
             <div class="player team-b p1">
                 <img
                     class="avatar"
                     :src="match.team_b[0].avatar.url"
                     :alt="`${match.team_b[0].name}'s Avatar`"
                 />
-                <div class="name">{{ match.team_b[0].pcode }}</div>
+                <div class="name">{{ match.team_b[0].name }}</div>
             </div>
             <div class="player team-b p2">
                 <img
@@ -39,10 +42,9 @@ defineProps<{ match: MatchSchema }>();
                     :src="match.team_b[1].avatar.url"
                     :alt="`${match.team_b[1].name}'s Avatar`"
                 />
-                <div class="name">{{ match.team_b[1].pcode }}</div>
+                <div class="name">{{ match.team_b[1].name }}</div>
             </div>
         </div>
-        <div class="vs">VS</div>
     </div>
 </template>
 
@@ -51,70 +53,67 @@ defineProps<{ match: MatchSchema }>();
     container: match / inline-size;
     margin-top: 2rem;
 }
+.header {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+}
+.status {
+    font-size: 2rem;
+}
 .game-number {
     display: inline-block;
-    font-size: 2rem;
     font-weight: bold;
-    padding: 1rem 3rem;
+    font-size: 2rem;
+    padding: 0.75rem 2rem 0.5rem;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 1rem;
     border: 0.25rem solid white;
+    line-height: 1;
+    @media screen and (min-width: 700px) {
+        font-size: 2rem;
+        padding: 0.75rem 2rem 0.5rem;
+    }
 }
 .players {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 25cqw;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 1fr 1fr 0.5fr 1fr 1fr;
+    gap: 0px 2.5cqw;
     width: 100%;
     max-width: 1280px;
+    margin-top: 2rem;
 }
 .player {
-    position: relative;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 0.5rem solid red;
+    // overflow: hidden;
     &.team-a {
         border-color: red;
     }
-    &.team-b {
-        border-color: blue;
-    }
 }
 .name {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-
-    background-color: rgba(0, 0, 0, 0.5);
-    text-transform: uppercase;
-    font-weight: bold;
-    font-family: monospace;
-    font-size: 2.5rem;
-    line-height: 1;
-    letter-spacing: 0.125rem;
-    text-shadow: 0.25rem 0.25rem 0 black;
     text-align: center;
-    .team-a & {
-        bottom: auto;
-        top: 0;
-    }
+    font-size: 3.5cqw;
 }
 .avatar {
-    display: block;
-    // position: absolute;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
+    border-radius: 50%;
+    height: auto;
+    width: calc(100% - 1cqw - 1cqw);
+    border: double 1cqw transparent;
+    border-radius: 50%;
+    background-image: linear-gradient(white, white), linear-gradient(black, red);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    .team-b & {
+        background-image: linear-gradient(white, white),
+            linear-gradient(black, blue);
+    }
 }
 .vs {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -25%) skewX(-20deg);
-    line-height: 1;
-    font-size: 4rem;
-    font-weight: bold;
-    font-family: monospace;
-    text-shadow: 0.25rem 0.25rem 0 black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6cqw;
 }
 </style>

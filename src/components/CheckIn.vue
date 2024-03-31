@@ -4,6 +4,7 @@ import { queryCheckIns } from '../queries/checkin';
 import { singlePlayerCheckin } from '../queries/singlePlayerCheckin';
 import { discord } from '../store/discord';
 import { useDiscordCredentials } from '../composables/discordCredentials';
+import { useFormatDateTime } from '../composables/formatDateTime';
 import {
     CheckinSchema,
     MeetSchema,
@@ -73,21 +74,6 @@ const availOptions = ref([
     { text: '✅ Check-In', value: 'checkedin' },
 ]);
 
-const formatDateTime = (iso: string) => {
-    const date = new Date(iso).toLocaleDateString('en-US', {
-        weekday: 'short', // Abbreviated day of the week (e.g., Wed)
-        month: 'short', // Abbreviated month name (e.g., Apr)
-        day: '2-digit', // Day of the month as two digits (e.g., 03)
-    });
-    const time = new Date(iso).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short',
-    });
-
-    return `${date} ${time}`;
-};
-
 const proxySendCheckIn = (
     meetID: string,
     userStatus: CheckinSingleSchema['checkin_status']
@@ -149,7 +135,7 @@ watch(discord, async (newDiscord) => {
             :key="checkin.meet._id"
         >
             <div class="header">
-                <h3>{{ formatDateTime(checkin.meet.meet_time) }}</h3>
+                <h3>{{ useFormatDateTime(checkin.meet.meet_time) }}</h3>
                 <div class="your-status">
                     <div class="logged-in" v-show="discord.accessToken">
                         <div class="label">Your Status:</div>
@@ -308,9 +294,6 @@ pre {
     align-items: center;
     gap: 1rem;
     font-size: 1.75rem;
-
-    .label {
-    }
 }
 .logged-out {
     display: flex;

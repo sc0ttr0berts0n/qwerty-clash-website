@@ -2,7 +2,7 @@ import { useSanityClient } from '../composables/sanityClient';
 import { MeetSchema } from '../schemas/meet';
 
 const query = `
-*[_type=="meet"] {
+*[_type=="meet"] | order(meet_time asc) {
   _id,
   meet_time,
   match[]->{
