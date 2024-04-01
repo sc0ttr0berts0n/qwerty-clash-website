@@ -99,7 +99,7 @@ export const useDiscordCredentials = (passive = true) => {
         const isLocalhost = location.hostname === 'localhost';
         const authURL = isLocalhost
             ? 'https://discord.com/oauth2/authorize?client_id=1219998739381616650&response_type=token&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fauth%2Fdiscord&scope=identify'
-            : 'https://discord.com/oauth2/authorize?client_id=1219998739381616650&response_type=code&redirect_uri=https%3A%2F%2Fqwerty-clash.netlify.app%2Fauth%2Fdiscord&scope=identify';
+            : 'https://discord.com/oauth2/authorize?client_id=1219998739381616650&response_type=token&redirect_uri=https%3A%2F%2Fqwerty-clash.netlify.app%2Fauth%2Fdiscord&scope=identify';
         const popup = window.open(
             authURL,
             '_blank',
