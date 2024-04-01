@@ -31,7 +31,7 @@ export default async (req: Request, context: Context) => {
             },
         });
         const discordData = await discordResult.json();
-        console.log('\nHITTING DISCORD FOR ID:');
+        console.log('\nDISCORD ID RESPONSE:');
         console.log({
             discordID: discordData.id,
         });
@@ -80,20 +80,25 @@ export default async (req: Request, context: Context) => {
             console.log({
                 query,
             });
+        } else {
+            console.error(query);
         }
 
+        const response = {
+            accessToken,
+            meetID,
+            checkinStatus,
+            discordData,
+            knownUser,
+            doc,
+            query,
+        };
+
+        console.log('\nResponse Object:');
+        console.log(response);
+
         // return metadata
-        return new Response(
-            JSON.stringify({
-                accessToken,
-                meetID,
-                checkinStatus,
-                discordData,
-                knownUser,
-                doc,
-                query,
-            })
-        );
+        return new Response(JSON.stringify(response));
     } catch (error) {
         return new Response(JSON.stringify({ error }));
     }
