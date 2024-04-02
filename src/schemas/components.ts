@@ -15,3 +15,4 @@ export const match = object({
 });
 
 export type MatchSchema = z.infer<typeof match>;
+export type PlayerSchema = z.infer<typeof player>;

@@ -1,31 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { LeaderboardSchema } from '../schemas/leaderboard';
+import { LeaderboardSchema, StatlineSchema } from '../schemas/leaderboard';
 import { queryPlayerRecords } from '../queries/playerRecords';
 import PlayerBar from './PlayerBar.vue';
+import { PlayerSchema } from '../schemas/components';
 
 const data = ref<Awaited<ReturnType<typeof generateLeaderboard>> | null>(null);
 
-const generateLeaderboard = async (data: LeaderboardSchema[]) => {
+const generateLeaderboard = async (res: LeaderboardSchema) => {
     const map = new Map<
         string,
-        { win: number; loss: number; player: LeaderboardSchema['player'] }
-    >();
-    data.forEach((statline) => {
-        const { pcode } = statline.player;
+        {
+            win: number;
+            loss: number;
+            player: Partial<PlayerSchema>;
+        }
+    >(
+        res.players.map((player) => {
+            return [player.pcode, { win: 0, loss: 0, player }];
+        })
+    );
 
+    res.statlines.forEach((statline) => {
         // Get the record for the player if it exists, otherwise initialize with default values.
-        const record = map.get(pcode) || {
-            win: 0,
-            loss: 0,
-            player: statline.player,
-        };
+        const record = map.get(statline.player.pcode);
+
+        // undefined record guard
+        if (!record) {
+            throw new Error(
+                `Player ${statline.player.pcode} had no map entry.`
+            );
+        }
 
         // Increment the count based on the outcome.
         record[statline.outcome] += 1;
-
-        // Update the map entry for the player.
-        map.set(pcode, record);
     });
 
     return [...map.entries()]
@@ -51,19 +59,32 @@ queryPlayerRecords()
     <div class="leaderboard" v-if="data">
         <h2>Top {{ data.length }}</h2>
         <PlayerBar
-            v-for="entry in data"
+            v-for="(entry, index) in data.slice(0, Math.floor(data.length / 2))"
             :key="entry.pcode"
+            :position="index + 1"
             :pcode="entry.pcode"
             :wins="entry.wins"
             :losses="entry.losses"
             :name="entry.player.name"
-            :url="entry.player.avatar.url"
+            :url="entry.player.avatar?.url"
+            :color="entry.player.color"
+        />
+        <h2>Bottom {{ data.length }}</h2>
+        <PlayerBar
+            v-for="(entry, index) in data.slice(Math.floor(data.length / 2))"
+            :key="entry.pcode"
+            :position="index + 11"
+            :pcode="entry.pcode"
+            :wins="entry.wins"
+            :losses="entry.losses"
+            :name="entry.player.name"
+            :url="entry.player.avatar?.url"
             :color="entry.player.color"
         />
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 h2 {
     text-align: center;
     margin: 0;
@@ -72,6 +93,14 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    @media screen and (min-width: 600px) {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content repeat(10, min-content);
+        gap: 0.5rem 1rem;
+    }
 }
 </style>
 ../queries/playerRecords
