@@ -11,9 +11,7 @@ queryFullSchedule().then((res) => {
 </script>
 
 <template>
-    <div class="wrapper" v-if="schedule">
-        <FullSchedule :schedule="schedule" />
-    </div>
+    <FullSchedule :schedule="schedule" v-if="schedule" />
     <div class="empty-state" v-else>Loading</div>
 </template>
 

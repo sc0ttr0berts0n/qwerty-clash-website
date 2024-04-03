@@ -11,9 +11,7 @@ queryMeet().then((res) => {
 </script>
 
 <template>
-    <div class="wrapper" v-if="meets?.[0].match">
-        <Meet v-for="meet in meets" :meet="meet" />
-    </div>
+    <Meet v-for="meet in meets" :meet="meet" v-if="meets" />
     <div class="empty-state" v-else>
         No Meets with Matches Currently Scheduled
     </div>

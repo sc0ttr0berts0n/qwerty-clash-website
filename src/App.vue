@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router';
 import { useDiscordCredentials } from './composables/discordCredentials';
 import { discord } from './store/discord';
+import Nav from './components/Nav.vue';
 
 const discordCreds = useDiscordCredentials();
 discord.accessToken = discordCreds?.accessToken;
@@ -13,19 +14,7 @@ discord.avatar = discordCreds?.avatar;
 </script>
 
 <template>
-    <header>
-        <h1>Qwerty Clash 💥</h1>
-        <a
-            href="https://discord.com/oauth2/authorize?client_id=1219998739381616650&response_type=token&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth%2Fdiscord&scope=identify"
-            >Discord</a
-        >
-    </header>
-    <nav>
-        <RouterLink to="/leaderboard">Leaderboard</RouterLink>
-        <RouterLink to="/game-nights">Game Nights</RouterLink>
-        <RouterLink to="/full-schedule">Full Schedule</RouterLink>
-        <RouterLink to="/check-in">Check-In</RouterLink>
-    </nav>
+    <Nav />
     <main>
         <RouterView />
     </main>
@@ -49,22 +38,45 @@ header > a {
     border-radius: 0.25rem;
     display: block;
 }
-nav {
-    display: flex;
-    gap: 1rem;
+.nav-container {
+    grid-area: 1 / 1 / 3 / 2;
 }
 main {
+    grid-area: 1 / 2 / 2 / 3;
     width: 100%;
     flex-grow: 1;
-    display: flex;
     justify-content: center;
+    overflow: scroll;
+    padding-top: 3rem;
+    padding: 0 2rem 4rem;
 }
 footer {
-    margin-top: 6rem;
+    grid-area: 2 / 2 / 3 / 3;
     text-align: center;
     background-color: #111111;
-    width: 100%;
     line-height: 2;
+    color: #272f5a;
+    font-weight: bold;
+    background-color: #f89c3d;
+    background-image: url('/public/background-nav.svg'),
+        linear-gradient(45deg, #f5d626, #f89c3d);
+    background-repeat: no-repeat;
+    background-size: 400%;
+    background-position: 20% 130%;
+    padding: 1rem;
+    position: relative;
+    border-radius: 1rem;
+    margin: 0 1rem 1rem;
+    box-shadow: 0.25rem 0.25rem 0 0 black;
+
+    &::after {
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        inset: 0.25rem;
+        border: 2px solid white;
+        border-radius: 0.75rem;
+    }
 }
 h1 {
     margin: 0;

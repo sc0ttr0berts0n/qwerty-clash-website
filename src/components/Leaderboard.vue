@@ -56,50 +56,38 @@ queryPlayerRecords()
 </script>
 
 <template>
-    <div class="leaderboard-wrapper">
-        <h2>Leaderboard</h2>
-        <div class="leaderboard" v-if="data">
-            <h3>Top {{ data.length }}</h3>
-            <PlayerBar
-                v-for="(entry, index) in data.slice(
-                    0,
-                    Math.floor(data.length / 2)
-                )"
-                :key="entry.pcode"
-                :position="index + 1"
-                :pcode="entry.pcode"
-                :wins="entry.wins"
-                :losses="entry.losses"
-                :name="entry.player.name"
-                :url="entry.player.avatar?.url"
-                :color="entry.player.color"
-            />
-            <h3>Bottom {{ data.length }}</h3>
-            <PlayerBar
-                v-for="(entry, index) in data.slice(
-                    Math.floor(data.length / 2)
-                )"
-                :key="entry.pcode"
-                :position="index + 11"
-                :pcode="entry.pcode"
-                :wins="entry.wins"
-                :losses="entry.losses"
-                :name="entry.player.name"
-                :url="entry.player.avatar?.url"
-                :color="entry.player.color"
-            />
-        </div>
+    <h2>Leaderboard</h2>
+    <div class="leaderboard" v-if="data">
+        <h3>Top {{ data.length }}</h3>
+        <PlayerBar
+            v-for="(entry, index) in data.slice(0, Math.floor(data.length / 2))"
+            :key="entry.pcode"
+            :position="index + 1"
+            :pcode="entry.pcode"
+            :wins="entry.wins"
+            :losses="entry.losses"
+            :name="entry.player.name"
+            :url="entry.player.avatar?.url"
+            :color="entry.player.color"
+        />
+        <h3>Bottom {{ data.length }}</h3>
+        <PlayerBar
+            v-for="(entry, index) in data.slice(Math.floor(data.length / 2))"
+            :key="entry.pcode"
+            :position="index + 11"
+            :pcode="entry.pcode"
+            :wins="entry.wins"
+            :losses="entry.losses"
+            :name="entry.player.name"
+            :url="entry.player.avatar?.url"
+            :color="entry.player.color"
+        />
     </div>
 </template>
 
 <style lang="scss" scoped>
-h2 {
-    text-align: center;
-    margin: 0;
-}
 .leaderboard-wrapper {
     width: 100%;
-    max-width: 1280px;
 }
 .leaderboard {
     display: flex;
@@ -107,7 +95,7 @@ h2 {
     gap: 0.5rem;
     padding: 0 0.5rem;
     width: 100%;
-    @media screen and (min-width: 600px) {
+    @media screen and (min-width: 1200px) {
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: 1fr;

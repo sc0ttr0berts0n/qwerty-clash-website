@@ -87,12 +87,6 @@ $size: 2.25rem;
     align-items: center;
     gap: 0.5rem;
 }
-.game-number {
-    // display: inline;
-}
-.match-status {
-    // display: inline;
-}
 .avatar {
     width: $size;
     height: auto;
