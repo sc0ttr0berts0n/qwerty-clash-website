@@ -8,7 +8,7 @@ defineProps<{ match: MatchSchema }>();
     <div class="match">
         <div class="header">
             <div class="game-number">G{{ match.game_number }}</div>
-            <div class="status">
+            <div class="match-status">
                 {{ match.match_status === 'pending' ? 'PEND' : 'DONE' }}
             </div>
         </div>
@@ -56,13 +56,21 @@ defineProps<{ match: MatchSchema }>();
 $size: 2.25rem;
 .match {
     display: inline-flex;
+    align-self: flex-start;
+    flex-wrap: wrap;
+    font-size: 1.75rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    color: #272f5a;
     gap: 0.5rem;
     flex-direction: row;
-    font-family: monospace;
+    // font-family: monospace;
     background: #f89c3d;
     position: relative;
     border-radius: 0.75rem;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0.375rem 0.375rem 0 0 black;
+    // text-shadow: 0.175rem 0.175rem 0 black;
     &::after {
         content: '';
         position: absolute;
@@ -72,11 +80,18 @@ $size: 2.25rem;
     }
 }
 .header {
-    line-height: 0.6;
+    line-height: 1;
     margin-right: 0.5rem;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
+}
+.game-number {
+    display: inline;
+}
+.match-status {
+    display: inline;
 }
 .avatar {
     width: $size;
@@ -88,16 +103,19 @@ $size: 2.25rem;
 }
 .player {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 .name,
 .vs {
     line-height: 1;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+}
+.name {
+    width: 3ch;
 }
 .avatar {
     overflow: hidden;

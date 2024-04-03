@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { useFormatDateTime } from '../composables/formatDateTime';
-import { MeetSchema } from '../schemas/meet';
+import { FullScheduleSchema } from '../schemas/fullSchedule';
 import MiniMatch from './MiniMatch.vue';
 
-defineProps<{ meet: MeetSchema }>();
+defineProps<{ schedule: FullScheduleSchema[] }>();
 </script>
 
 <template>
-    <div class="meet" v-if="meet.match">
+    <div class="matches-wrapper" v-if="schedule">
         <h2>Full Schedule</h2>
-        <MiniMatch v-for="match in meet.match" :match="match" />
+        <MiniMatch v-for="match in schedule" :match="match" />
     </div>
 </template>
 
 <style scoped>
-.meet {
+.matches-wrapper {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

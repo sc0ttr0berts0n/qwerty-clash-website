@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { queryMeet } from '../queries/meets';
-import { MeetSchema } from '../schemas/meet';
+import { queryFullSchedule } from '../queries/fullSchedule';
 import FullSchedule from '../components/FullSchedule.vue';
+import { FullScheduleSchema } from '../schemas/fullSchedule';
 
-const meets = ref<MeetSchema[]>();
-queryMeet().then((res) => {
-    meets.value = res;
+const schedule = ref<FullScheduleSchema[]>();
+queryFullSchedule().then((res) => {
+    schedule.value = res;
 });
 </script>
 
 <template>
-    <div class="wrapper" v-if="meets?.[0].match">
-        <FullSchedule v-for="meet in meets" :meet="meet" />
+    <div class="wrapper" v-if="schedule">
+        <FullSchedule :schedule="schedule" />
     </div>
     <div class="empty-state" v-else>Loading</div>
 </template>
