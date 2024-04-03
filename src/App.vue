@@ -47,6 +47,8 @@ main {
     flex-grow: 1;
     justify-content: center;
     overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
     padding-top: 3rem;
     padding: 0 2rem 4rem;
 }
