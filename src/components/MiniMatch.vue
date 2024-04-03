@@ -64,13 +64,11 @@ $size: 2.25rem;
     color: #272f5a;
     gap: 0.5rem;
     flex-direction: row;
-    // font-family: monospace;
     background: #f89c3d;
     position: relative;
     border-radius: 0.75rem;
     padding: 0.5rem 1rem;
     box-shadow: 0.375rem 0.375rem 0 0 black;
-    // text-shadow: 0.175rem 0.175rem 0 black;
     &::after {
         content: '';
         position: absolute;
@@ -86,6 +84,12 @@ $size: 2.25rem;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
+}
+.game-number {
+    width: 3ch;
+}
+.match-status {
+    width: 4ch;
 }
 .avatar {
     width: $size;

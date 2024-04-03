@@ -238,7 +238,7 @@ pre {
             font-size: 1.25rem;
             padding: 0.25rem 0;
         }
-        @media screen and (min-width: 950px) {
+        @media screen and (min-width: 1628px) {
             display: none;
         }
     }
@@ -247,7 +247,7 @@ pre {
         display: none;
         padding: 0.5rem 0;
         font-size: 1.5cqw;
-        @media screen and (min-width: 950px) {
+        @media screen and (min-width: 1628px) {
             display: block;
         }
         @media screen and (min-width: 1280px) {
