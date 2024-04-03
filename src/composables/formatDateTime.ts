@@ -5,7 +5,7 @@ export const useFormatDateTime = (iso: string) => {
         day: '2-digit', // Day of the month as two digits (e.g., 03)
     });
     const time = new Date(iso).toLocaleTimeString('en-US', {
-        hour: '2-digit',
+        hour: 'numeric',
         minute: '2-digit',
         timeZoneName: 'short',
     });

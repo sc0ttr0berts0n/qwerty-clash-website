@@ -67,12 +67,34 @@ const availEmoji = computed(() => {
     };
 });
 
-const availOptions = ref([
+const options = ref([
     { text: '💤 No Response', value: 'unknown' },
     { text: '❌ Unavailable', value: 'unavailable' },
     { text: '🟡 Will Attend', value: 'rsvp' },
     { text: '✅ Check-In', value: 'checkedin' },
 ]);
+
+const checkinWindow = 1000 * 60 * 60 * 3; // 3 hours
+
+const isOptionAvailable = (opt: string, startTime: string) => {
+    const now = Date.now();
+    const start = Date.parse(startTime);
+    if (opt === 'checkedin') {
+        const checkInStart = start - checkinWindow;
+        return now > checkInStart;
+    }
+    return true;
+};
+
+const isCheckinAvailable = (startTime: string) => {
+    return isOptionAvailable('checkedin', startTime);
+};
+
+const checkinStartTime = (meetTime: string) => {
+    const start = new Date(meetTime);
+    const checkinStart = new Date(start.getTime() - checkinWindow);
+    return useFormatDateTime(checkinStart.toISOString());
+};
 
 const proxySendCheckIn = (
     meetID: string,
@@ -151,7 +173,12 @@ watch(discord, async (newDiscord) => {
                             "
                         >
                             <option
-                                v-for="option in availOptions"
+                                v-for="option in options.filter((opt) => {
+                                    return isOptionAvailable(
+                                        opt.value,
+                                        checkin.meet.meet_time
+                                    );
+                                })"
                                 :value="option.value"
                             >
                                 {{ option.text }}
@@ -165,6 +192,16 @@ watch(discord, async (newDiscord) => {
                         </button>
                     </div>
                 </div>
+            </div>
+            <div class="check-in-note">
+                <p v-if="isCheckinAvailable(checkin.meet.meet_time)">
+                    Check-in is now open!
+                </p>
+                <p v-else>
+                    Please share your tentative availability now and stop back
+                    later. Check-in begins
+                    {{ checkinStartTime(checkin.meet.meet_time) }}.
+                </p>
             </div>
             <div class="players">
                 <div
@@ -270,6 +307,9 @@ pre {
         font-size: 1.25rem;
         padding-bottom: 1rem;
     }
+}
+.check-in-note {
+    margin-top: 0.5rem;
 }
 .avatar {
     display: block;
