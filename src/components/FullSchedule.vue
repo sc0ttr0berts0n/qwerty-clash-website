@@ -22,7 +22,7 @@ const filterSchedule = () => {
         const bigString =
             `${game_number} ${match_status} ${teams}`.toLowerCase();
 
-        const terms = filter.value.trim().split(' ');
+        const terms = filter.value.toLowerCase().trim().split(' ');
         const includeTerms = terms.filter((term) => !term.startsWith('-'));
         const excludeTerms = terms
             .filter((term) => term.startsWith('-'))
