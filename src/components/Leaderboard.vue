@@ -58,7 +58,7 @@ queryPlayerRecords()
 <template>
     <h2>Leaderboard</h2>
     <div class="leaderboard" v-if="data">
-        <h3>Top {{ data.length }}</h3>
+        <h3>Top {{ Math.floor(data.length / 2) }}</h3>
         <PlayerBar
             v-for="(entry, index) in data.slice(0, Math.floor(data.length / 2))"
             :key="entry.pcode"
@@ -70,7 +70,7 @@ queryPlayerRecords()
             :url="entry.player.avatar?.url"
             :color="entry.player.color"
         />
-        <h3>Bottom {{ data.length }}</h3>
+        <h3>Bottom {{ Math.floor(data.length / 2) }}</h3>
         <PlayerBar
             v-for="(entry, index) in data.slice(Math.floor(data.length / 2))"
             :key="entry.pcode"
