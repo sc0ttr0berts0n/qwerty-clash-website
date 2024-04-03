@@ -21,9 +21,9 @@ discord.avatar = discordCreds?.avatar;
         >
     </header>
     <nav>
-        <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/leaderboard">Leaderboard</RouterLink>
-        <RouterLink to="/meet">Meets</RouterLink>
+        <RouterLink to="/game-nights">Game Nights</RouterLink>
+        <RouterLink to="/full-schedule">Full Schedule</RouterLink>
         <RouterLink to="/check-in">Check-In</RouterLink>
     </nav>
     <main>
@@ -36,7 +36,7 @@ discord.avatar = discordCreds?.avatar;
 header {
     display: flex;
     align-items: center;
-    background-color: #ff5050;
+    background-color: #f89c3d;
     width: 100%;
     text-align: center;
     padding: 0;
@@ -60,8 +60,11 @@ main {
     justify-content: center;
 }
 footer {
+    margin-top: 6rem;
     text-align: center;
     background-color: #111111;
+    width: 100%;
+    line-height: 2;
 }
 h1 {
     margin: 0;

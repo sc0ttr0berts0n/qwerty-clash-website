@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { queryMeet } from '../queries/meets';
 import { MeetSchema } from '../schemas/meet';
-import Meet from '../components/Meet.vue';
+import FullSchedule from '../components/FullSchedule.vue';
 
 const meets = ref<MeetSchema[]>();
 queryMeet().then((res) => {
@@ -12,11 +12,9 @@ queryMeet().then((res) => {
 
 <template>
     <div class="wrapper" v-if="meets?.[0].match">
-        <Meet v-for="meet in meets" :meet="meet" />
+        <FullSchedule v-for="meet in meets" :meet="meet" />
     </div>
-    <div class="empty-state" v-else>
-        No Meets with Matches Currently Scheduled
-    </div>
+    <div class="empty-state" v-else>Loading</div>
 </template>
 
 <style scoped>
