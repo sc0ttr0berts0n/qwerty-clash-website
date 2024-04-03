@@ -31,7 +31,6 @@ withDefaults(
 .player-bar {
     position: relative;
     display: flex;
-    height: 4rem;
     border-radius: 0.5rem;
     overflow: hidden;
     max-width: 500px;
@@ -39,10 +38,23 @@ withDefaults(
     text-transform: uppercase;
     font-weight: bold;
     font-family: monospace;
-    font-size: 1.5rem;
     text-shadow: 0.175rem 0.175rem 0 black;
 
+    height: 3rem;
+
     box-shadow: 0.375rem 0.375rem 0 0 black;
+    @media screen and (min-width: 400px) {
+        height: 4rem;
+        font-size: 1.5rem;
+    }
+    @media screen and (min-width: 600px) {
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+    @media screen and (min-width: 800px) {
+        height: 4rem;
+        font-size: 1.5rem;
+    }
     &::after {
         content: '';
         position: absolute;
@@ -56,12 +68,29 @@ withDefaults(
     border-right: 2px solid white;
 }
 .name {
+    position: relative;
     flex-grow: 1;
     height: 100%;
     display: flex;
     // justify-content: center;
     align-items: center;
     padding: 0 1rem;
+    // white-space: nowrap;
+    overflow: hidden;
+    line-height: 1;
+    text-overflow: ellipsis;
+    width: 20%;
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            to left,
+            v-bind(color) 10%,
+            rgba(255, 255, 255, 0) 20%
+        );
+    }
 }
 .position {
     height: 100%;
@@ -82,5 +111,6 @@ withDefaults(
     align-items: center;
     padding: 0 1rem;
     background-color: rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
 }
 </style>

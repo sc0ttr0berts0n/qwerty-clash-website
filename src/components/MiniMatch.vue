@@ -88,14 +88,15 @@ $size: 2.25rem;
     gap: 0.5rem;
 }
 .game-number {
-    display: inline;
+    // display: inline;
 }
 .match-status {
-    display: inline;
+    // display: inline;
 }
 .avatar {
     width: $size;
     height: auto;
+    border: 2px solid white;
 }
 .players {
     display: flex;

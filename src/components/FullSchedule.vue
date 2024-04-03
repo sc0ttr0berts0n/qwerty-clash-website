@@ -6,7 +6,7 @@ import MiniMatch from './MiniMatch.vue';
 const { schedule } = defineProps<{ schedule: FullScheduleSchema[] }>();
 
 const workingSchedule = ref(schedule);
-const filter = ref('SKT');
+const filter = ref('');
 
 const filterSchedule = () => {
     workingSchedule.value = schedule.filter((match) => {
@@ -22,7 +22,7 @@ const filterSchedule = () => {
         const bigString =
             `${game_number} ${match_status} ${teams}`.toLowerCase();
 
-        const terms = filter.value.split(' ');
+        const terms = filter.value.trim().split(' ');
         const includeTerms = terms.filter((term) => !term.startsWith('-'));
         const excludeTerms = terms
             .filter((term) => term.startsWith('-'))
@@ -77,7 +77,7 @@ const filterSchedule = () => {
     border: 0;
     height: var(--size);
     border-radius: calc(var(--size) / 2);
-    padding: 0.125rem 1rem 0;
+    padding: 0.125rem 0.75rem 0;
     font-size: 1.5rem;
     font-family: 'Bebas Neue', sans-serif;
     line-height: 1;

@@ -6,14 +6,4 @@ import Leaderboard from '../components/Leaderboard.vue';
     <Leaderboard />
 </template>
 
-<style scoped>
-h2 {
-    text-align: center;
-    margin: 0;
-}
-.leaderboard {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-</style>
+<style scoped></style>
