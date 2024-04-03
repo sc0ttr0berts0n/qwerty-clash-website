@@ -3,6 +3,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import { useDiscordCredentials } from './composables/discordCredentials';
 import { discord } from './store/discord';
 import Nav from './components/Nav.vue';
+import pjson from '../package.json';
 
 const discordCreds = useDiscordCredentials();
 discord.accessToken = discordCreds?.accessToken;
@@ -18,7 +19,10 @@ discord.avatar = discordCreds?.avatar;
     <main>
         <RouterView />
     </main>
-    <footer>QWERTYCAST MADE THIS</footer>
+    <footer>
+        <a href="https://qwertycast.com/">QWERTYCAST</a> MADE THIS
+        <span class="version">(v{{ pjson.version }})</span>
+    </footer>
 </template>
 
 <style scoped>
@@ -79,6 +83,15 @@ footer {
         border: 2px solid white;
         border-radius: 0.75rem;
     }
+}
+footer > a {
+    color: #272f5a;
+    &:hover {
+        text-decoration: none;
+    }
+}
+.version {
+    font-size: 1rem;
 }
 h1 {
     margin: 0;
