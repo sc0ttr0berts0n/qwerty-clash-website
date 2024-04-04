@@ -45,7 +45,13 @@ const generateLeaderboard = async (res: LeaderboardSchema) => {
                 player: entry[1].player,
             };
         })
-        .sort((a, b) => b.wins - a.wins);
+        .sort((a, b) => {
+            const lossTie = a.losses === b.losses;
+            const winPercentTie = a.wins / a.losses === b.wins / b.losses;
+            if (!lossTie) return a.losses - b.losses;
+            if (!winPercentTie) return b.wins / b.losses - a.wins / a.losses;
+            return a.wins - b.wins;
+        });
 };
 
 queryPlayerRecords()
