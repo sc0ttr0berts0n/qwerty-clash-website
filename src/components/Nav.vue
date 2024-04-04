@@ -8,7 +8,7 @@ const navOpen = ref(false);
     <div class="nav-container" :class="{ active: navOpen }">
         <div class="nav-wrapper">
             <header>
-                <h1 class="logo"><img src="/public/logo.svg" /></h1>
+                <div class="logo"><img src="/public/logo.svg" /></div>
             </header>
             <nav>
                 <RouterLink to="/leaderboard">Leaderboard</RouterLink>

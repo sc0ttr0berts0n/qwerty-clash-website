@@ -149,7 +149,7 @@ watch(discord, async (newDiscord) => {
             <div class="key">✅ Checked-In</div>
         </div>
     </div>
-    <h2>Check-Ins</h2>
+    <h2>Availability Overview</h2>
     <div class="checkin-wrapper">
         <div
             class="checkin"

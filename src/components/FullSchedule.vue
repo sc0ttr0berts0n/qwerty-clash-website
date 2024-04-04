@@ -42,8 +42,7 @@ const filterSchedule = () => {
 
 <template>
     <div class="matches-wrapper" v-if="schedule">
-        <h2>Full Schedule</h2>
-        <h3>Filter</h3>
+        <h2>Filter</h2>
         <input
             class="filter"
             type="text"
@@ -51,11 +50,11 @@ const filterSchedule = () => {
             @keyup="filterSchedule"
         />
         <p>Separate terms with a space. Use a "-" minus to omit terms.</p>
-        <h3>
+        <h2>
             {{
                 workingSchedule.length === schedule.length ? '' : 'Filtered '
             }}Schedule ({{ workingSchedule.length }} Games)
-        </h3>
+        </h2>
         <MiniMatch v-for="match in workingSchedule" :match="match" />
         <div class="empty-state" v-if="workingSchedule.length === 0">
             No games found using current filters.

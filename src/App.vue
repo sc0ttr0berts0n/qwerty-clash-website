@@ -54,7 +54,7 @@ main {
     overflow-x: hidden;
     overflow-y: scroll;
     padding-top: 3rem;
-    padding: 0 2rem 4rem;
+    padding: 4rem 2rem;
 }
 footer {
     grid-area: 2 / 2 / 3 / 3;

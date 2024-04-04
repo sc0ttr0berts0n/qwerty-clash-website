@@ -51,7 +51,7 @@ defineProps<{ match: MatchSchema }>();
 <style lang="scss" scoped>
 .match {
     container: match / inline-size;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 .header {
     margin-top: 2rem;
