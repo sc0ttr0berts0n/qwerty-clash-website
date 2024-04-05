@@ -46,11 +46,20 @@ const generateLeaderboard = async (res: LeaderboardSchema) => {
             };
         })
         .sort((a, b) => {
-            const lossTie = a.losses === b.losses;
-            const winPercentTie = a.wins / a.losses === b.wins / b.losses;
-            if (!lossTie) return a.losses - b.losses;
-            if (!winPercentTie) return b.wins / b.losses - a.wins / a.losses;
-            return a.wins - b.wins;
+            const winTie = a.wins === b.wins;
+            const aWinPercent = a.wins / a.losses;
+            const bWinPercent = b.wins / b.losses;
+            const winPercentTie = aWinPercent === bWinPercent;
+
+            if (winPercentTie) {
+                if (winTie) {
+                    return a.losses - b.losses;
+                } else {
+                    return b.wins - a.wins;
+                }
+            } else {
+                return bWinPercent - aWinPercent;
+            }
         });
 };
 

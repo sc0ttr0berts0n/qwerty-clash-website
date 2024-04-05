@@ -11,7 +11,7 @@ queryMeet().then((res) => {
 </script>
 
 <template>
-    <h1>Meets</h1>
+    <h1>Game Nights</h1>
     <Meet v-for="meet in meets" :meet="meet" />
 </template>
 
