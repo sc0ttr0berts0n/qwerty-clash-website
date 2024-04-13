@@ -20,7 +20,7 @@ discord.avatar = discordCreds?.avatar;
         <RouterView />
     </main>
     <footer>
-        <a href="https://qwertycast.com/">QWERTYCAST</a> MADE THIS
+        <a href="http://qwertycast.com/">QWERTYCAST</a> MADE THIS
         <span class="version">(v{{ pjson.version }})</span>
     </footer>
 </template>
