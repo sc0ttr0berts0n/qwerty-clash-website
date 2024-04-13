@@ -7,7 +7,7 @@ import { MatchSchema } from '../schemas/components';
 import { queryMeet } from '../queries/meets';
 import Match from '../components/Match.vue'
 import MiniMatch from '../components/MiniMatch.vue'
-document.body.classList.add('twitch');
+document.body.classList.add('twitch', 'upcoming-games');
 
 const match = ref();
 const nextUp = ref<MatchSchema[]>();
@@ -33,11 +33,11 @@ queryMeet().then((res) => {
 </template>
 
 <style lang="scss">
-body.twitch {
+body.twitch.upcoming-games {
 
     background: #00ff00;
 }
-.twitch {
+.twitch.upcoming-games {
     #app {
         max-width: 750px;
     }

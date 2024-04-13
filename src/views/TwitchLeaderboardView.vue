@@ -5,7 +5,7 @@ import Meet from '../components/Meet.vue';
 import { MeetSchema } from '../schemas/meet';
 import { queryMeet } from '../queries/meets';
 
-document.body.classList.add('twitch');
+document.body.classList.add('twitch', 'leaderboard');
 
 const meets = ref<MeetSchema[]>();
 queryMeet().then((res) => {
@@ -19,7 +19,7 @@ queryMeet().then((res) => {
 </template>
 
 <style lang="scss">
-.twitch{
+.twitch.leaderboard{
 
     #app {
         background: #00ff00;
