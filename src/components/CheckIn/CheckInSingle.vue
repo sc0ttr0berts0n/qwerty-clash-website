@@ -5,7 +5,6 @@ import { discord } from '../../store/discord';
 import { useDiscordCredentials } from '../../composables/discordCredentials';
 import { useFormatDateTime } from '../../composables/formatDateTime';
 import {
-    CheckinSchema,
     MeetSchema,
     PlayerSchema,
     CheckinSingleSchema,
@@ -16,7 +15,7 @@ import MiniMatch from '../MiniMatch.vue';
 import { MatchSchema } from '../../schemas/components';
 import { parseCommandLine } from 'typescript';
 
-type Checkin = {
+export type CheckinFromComponent = {
     meet: MeetSchema;
     players: Array<
         PlayerSchema & {
@@ -26,9 +25,12 @@ type Checkin = {
     userStatus: CheckinSingleSchema['checkin_status'];
 };
 
-const props = defineProps<{checkin: Checkin, schedule: FullScheduleSchema[] | null }>();
+const props = defineProps<{
+    checkin: CheckinFromComponent;
+    schedule: FullScheduleSchema[] | null;
+}>();
 
-const {checkin, schedule } = props;
+const { checkin, schedule } = props;
 
 const availEmoji = computed(() => {
     return (avail: CheckinSingleSchema['checkin_status']) => {
@@ -47,14 +49,14 @@ const availEmoji = computed(() => {
     };
 });
 
+const checkinWindow = 1000 * 60 * 60 * 3; // 3 hours
+
 const options = ref([
     { text: '💤 No Response', value: 'unknown' },
     { text: '❌ Unavailable', value: 'unavailable' },
     { text: '🟡 Will Attend', value: 'rsvp' },
     { text: '✅ Check-In', value: 'checkedin' },
 ]);
-
-const checkinWindow = 1000 * 60 * 60 * 3; // 3 hours
 
 const isOptionAvailable = (opt: string, startTime: string) => {
     const now = Date.now();
@@ -87,7 +89,9 @@ const proxySendCheckIn = (
         })
         .then((data) => {
             // if you get a server response, update the content
-            const player = checkin?.players?.find((p) => p.discord_id === data.discordData.id);
+            const player = checkin?.players?.find(
+                (p) => p.discord_id === data.discordData.id
+            );
             if (!player) return;
             player.checkinStatus = data.checkinStatus;
         });
@@ -105,7 +109,7 @@ watch(discord, async (newDiscord) => {
     const pcheckins = await singlePlayerCheckin(discord.id);
 
     pcheckins?.forEach((pcheck) => {
-        const existingMeet = checkin.meet._id === pcheck.meet._ref
+        const existingMeet = checkin.meet._id === pcheck.meet._ref;
 
         if (!existingMeet) return;
         checkin.userStatus = pcheck.checkin_status;
@@ -113,122 +117,144 @@ watch(discord, async (newDiscord) => {
 });
 
 const possibleMatches = computed((): MatchSchema[] => {
-    const avail = checkin.players.filter(p => p.checkinStatus === 'checkedin' || p.checkinStatus === 'rsvp').map(p => p.pcode);
-    const matches = schedule?.filter(match => {
-        // only matches which are pending
-        if (match.match_status !== 'pending') return false;
+    const avail = checkin.players
+        .filter(
+            (p) => p.checkinStatus === 'checkedin' || p.checkinStatus === 'rsvp'
+        )
+        .map((p) => p.pcode);
+    const matches =
+        schedule
+            ?.filter((match) => {
+                // only matches which are pending
+                if (match.match_status !== 'pending') return false;
 
-        // get a list of all matches players
-        const players = [...match.team_a, ...match.team_b];
+                // get a list of all matches players
+                const players = [...match.team_a, ...match.team_b];
 
-        // make sure every player in match is avail
-        return players.every(p => avail.includes(p.pcode))
-    })?.slice(0, 10) ?? [];
+                // make sure every player in match is avail
+                return players.every((p) => avail.includes(p.pcode));
+            })
+            ?.slice(0, 10) ?? [];
 
     return matches;
-})
+});
 
 const appearances = computed(() => {
-    const pMap = new Map(checkin.players.map(p => [p.pcode, 0]))
-    possibleMatches.value.map(m => [...m.team_a.map(p => p.pcode), ...m.team_b.map(p => p.pcode)]).flat().forEach(p => {
-        const count = pMap.get(p);
-        if (count !== undefined) {
-            pMap.set(p, count + 1);
-        }
-    })
+    const pMap = new Map(checkin.players.map((p) => [p.pcode, 0]));
+    possibleMatches.value
+        .map((m) => [
+            ...m.team_a.map((p) => p.pcode),
+            ...m.team_b.map((p) => p.pcode),
+        ])
+        .flat()
+        .forEach((p) => {
+            const count = pMap.get(p);
+            if (count !== undefined) {
+                pMap.set(p, count + 1);
+            }
+        });
 
-    const byes = [...pMap.entries()].filter(([_p, count]) => count === 0).map(([pcode]) => pcode);
-    const participant = [...pMap.entries()].filter(([_p, count]) => count > 0).map(([pcode, count]) => { return { pcode, count } });
+    const byes = [...pMap.entries()]
+        .filter(([_p, count]) => count === 0)
+        .map(([pcode]) => pcode);
+    const participant = [...pMap.entries()]
+        .filter(([_p, count]) => count > 0)
+        .map(([pcode, count]) => {
+            return { pcode, count };
+        });
 
     return {
         byes,
-        participant
-    }
-})
-
+        participant,
+    };
+});
 </script>
 
 <template>
-        <div
-            class="checkin"
-        >
-            <div class="header">
-                <h3>{{ useFormatDateTime(checkin.meet.meet_time) }}</h3>
-                <div class="your-status">
-                    <div class="logged-in" v-show="discord.accessToken">
-                        <div class="label">Your Status:</div>
-                        <select
-                            name="status"
-                            class="status-select"
-                            v-model="checkin.userStatus"
-                            @change="
-                                proxySendCheckIn(
-                                    checkin.meet._id,
-                                    checkin.userStatus
-                                )
-                            "
+    <div class="checkin">
+        <div class="header">
+            <h3>{{ useFormatDateTime(checkin.meet.meet_time) }}</h3>
+            <div class="your-status">
+                <div class="logged-in" v-show="discord.accessToken">
+                    <div class="label">Your Status:</div>
+                    <select
+                        name="status"
+                        class="status-select"
+                        v-model="checkin.userStatus"
+                        @change="
+                            proxySendCheckIn(
+                                checkin.meet._id,
+                                checkin.userStatus
+                            )
+                        "
+                    >
+                        <option
+                            v-for="option in options.filter((opt) => {
+                                return isOptionAvailable(
+                                    opt.value,
+                                    checkin.meet.meet_time
+                                );
+                            })"
+                            :value="option.value"
                         >
-                            <option
-                                v-for="option in options.filter((opt) => {
-                                    return isOptionAvailable(
-                                        opt.value,
-                                        checkin.meet.meet_time
-                                    );
-                                })"
-                                :value="option.value"
-                            >
-                                {{ option.text }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="logged-out" v-show="!discord.accessToken">
-                        <div class="label">Login to set status</div>
-                        <button @click="useDiscordCredentials(false)">
-                            Discord
-                        </button>
-                    </div>
+                            {{ option.text }}
+                        </option>
+                    </select>
                 </div>
-            </div>
-            <div class="check-in-note">
-                <p v-if="isCheckinAvailable(checkin.meet.meet_time)">
-                    Check-in is now open!
-                </p>
-                <p v-else>
-                    Please share your tentative availability now and stop back
-                    later. Check-in begins
-                    {{ checkinStartTime(checkin.meet.meet_time) }}.
-                </p>
-            </div>
-            <div class="players">
-                <div
-                    class="player"
-                    v-for="player in checkin.players"
-                    :key="player.name"
-                >
-                    <img
-                        class="avatar"
-                        :src="player.avatar.url"
-                        alt=""
-                        width="500"
-                        height="500"
-                    />
-                    <div class="name">
-                        <div class="full-name">{{ player.name }}</div>
-                        <div class="pcode-name">{{ player.pcode }}</div>
-                    </div>
-                    <div class="availability">
-                        {{ availEmoji(player.checkinStatus) }}
-                    </div>
+                <div class="logged-out" v-show="!discord.accessToken">
+                    <div class="label">Login to set status</div>
+                    <button @click="useDiscordCredentials(false)">
+                        Discord
+                    </button>
                 </div>
-            </div>
-            <h3>Possible Matches</h3>
-            <p>These are subject to change as availability updates.</p>
-            <div class="matches-wrapper">
-                <MiniMatch v-for="match in possibleMatches" :match="match" />
-            </div>
-            <div class="appearances"><h4>Byes</h4>{{ appearances.byes.join(', ') }}<h4>Game Count:</h4><span v-for="p in appearances.participant">{{ p.pcode }}: {{ p.count }}<br/></span>
             </div>
         </div>
+        <div class="check-in-note">
+            <p v-if="isCheckinAvailable(checkin.meet.meet_time)">
+                Check-in is now open!
+            </p>
+            <p v-else>
+                Please share your tentative availability now and stop back
+                later. Check-in begins
+                {{ checkinStartTime(checkin.meet.meet_time) }}.
+            </p>
+        </div>
+        <div class="players">
+            <div
+                class="player"
+                v-for="player in checkin.players"
+                :key="player.name"
+            >
+                <img
+                    class="avatar"
+                    :src="player.avatar.url"
+                    alt=""
+                    width="500"
+                    height="500"
+                />
+                <div class="name">
+                    <div class="full-name">{{ player.name }}</div>
+                    <div class="pcode-name">{{ player.pcode }}</div>
+                </div>
+                <div class="availability">
+                    {{ availEmoji(player.checkinStatus) }}
+                </div>
+            </div>
+        </div>
+        <h3>Possible Matches</h3>
+        <p>These are subject to change as availability updates.</p>
+        <div class="matches-wrapper">
+            <MiniMatch v-for="match in possibleMatches" :match="match" />
+        </div>
+        <div class="appearances">
+            <h4>Byes</h4>
+            {{ appearances.byes.join(', ') }}
+            <h4>Game Count:</h4>
+            <span v-for="p in appearances.participant"
+                >{{ p.pcode }}: {{ p.count }}<br
+            /></span>
+        </div>
+    </div>
 </template>
 
 <style lang="scss" scoped>
