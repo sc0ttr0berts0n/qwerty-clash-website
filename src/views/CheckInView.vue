@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CheckIn from '../components/CheckIn.vue';
+import CheckInList from '../components/CheckIn/CheckInList.vue';
 </script>
 
 <template>
@@ -13,7 +13,7 @@ import CheckIn from '../components/CheckIn.vue';
         <a href="https://discordapp.com/users/258769207087464449">@Fieldday</a>
         on Discord.
     </p>
-    <CheckIn />
+    <CheckInList />
 </template>
 
 <style scoped>

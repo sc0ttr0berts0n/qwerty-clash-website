@@ -92,13 +92,13 @@ export const useDiscordCredentials = (passive = true) => {
 
     // if active discord sync is needed, hit the redirect API
     if (!passive && !fragmentSuccess && !localStorageSuccess) {
-        const popupWidth = 600;
+        const popupWidth = 900;
         const popupHeight = 850;
         const leftPosition = (window.screen.width - popupWidth) / 2;
         const topPosition = (window.screen.height - popupHeight) / 2;
         const redirectURL = (host: string) => {
             switch (host) {
-                case 'losthost':
+                case 'localhost':
                     return 'https://discord.com/oauth2/authorize?client_id=1219998739381616650&response_type=token&redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fauth%2Fdiscord&scope=identify';
 
                 case 'qwerty-clash.netlify.app':
@@ -110,6 +110,7 @@ export const useDiscordCredentials = (passive = true) => {
                     return '';
             }
         };
+
         const popup = window.open(
             redirectURL(location.hostname),
             '_blank',

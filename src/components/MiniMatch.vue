@@ -53,16 +53,18 @@ defineProps<{ match: MatchSchema }>();
 </template>
 
 <style lang="scss" scoped>
-$size: 2.25rem;
+$size-sm: 1.5rem;
+$size-lg: 2.25rem;
 .match {
+    container-name: match;
     display: inline-flex;
     align-self: flex-start;
     flex-wrap: wrap;
-    font-size: 1.75rem;
+    font-size: 0.865rem;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
     color: #272f5a;
-    gap: 0.5rem;
+    gap: 0.25rem;
     flex-direction: row;
     background: #f89c3d;
     position: relative;
@@ -76,6 +78,11 @@ $size: 2.25rem;
         border: 0.125rem solid white;
         border-radius: 0.5rem;
     }
+    @media screen and (min-width: 700px) {
+        font-size: 1.75rem;
+            gap: 0.5rem;
+
+    }
 }
 .header {
     line-height: 1;
@@ -83,7 +90,11 @@ $size: 2.25rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    @media screen and (min-width: 700px) {
+            gap: 0.5rem;
+
+    }
 }
 .game-number {
     width: 3ch;
@@ -92,13 +103,21 @@ $size: 2.25rem;
     width: 4ch;
 }
 .avatar {
-    width: $size;
+    width: $size-sm;
     height: auto;
-    border: 2px solid white;
+    @media screen and (min-width: 700px) {
+        border: 2px solid white;
+        width: $size-lg;
+    }
+
 }
 .players {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
+    @media screen and (min-width: 700px) {
+            gap: 0.5rem;
+
+    }
 }
 .player {
     display: flex;
@@ -106,6 +125,7 @@ $size: 2.25rem;
     justify-content: center;
     align-items: center;
     gap: 0.25rem;
+
 }
 .name,
 .vs {
