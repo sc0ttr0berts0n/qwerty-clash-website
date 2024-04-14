@@ -10,36 +10,62 @@ queryMeet().then((res) => {
     meets.value = res;
 });
 
-// pcode to corey code
-const map = {
-    LEE: 1, // - Allegedlee / Lee
-    AMR: 2, // - Amorales / Andrew
-    BBG: 3, // - Bbgameslab / BB
-    ATM: 4, // - At0msk / Britnaa
-    OSA: 5, // - Osageoj / Cleclair / Chris
-    DVD: 6, // - David
-    DRE: 7, // - Dredre / Andres
-    XAV: 8, // - F.C.P.X.A.V.I. / Xav
-    FLD: 9, // - Fieldday / Kenny
-    GRY: 10, // - Gray / Gary
-    JMZ: 11, // - Jmarutz /
-    KLE: 12, // - Kelebrae /
-    NCR: 13, // - Nerd Cruncher /
-    OLI: 14, // - Oli.Online / Oli
-    XXX: 15, // - Sebaceous / Evan
-    SKT: 16, // - Skataroni / Scott
-    CHZ: 17, // - SuperChenz /
-    SWG: 18, // - Swaggerdragon / Lawson
-    VNL: 19, // - Venilor / Cody
-    VFT: 20, // - Veshift / Tim
-} as const;
+const pcodeToBcode = (pcode: any) => {
+    // Use a switch statement to match the name to its corresponding code
+    switch (pcode) {
+        case 'LEE': // - Allegedlee / Lee
+            return 1;
+        case 'AMR': // - Amorales / Andrew
+            return 2;
+        case 'BBG': // - Bbgameslab / BB
+            return 3;
+        case 'ATM': // - At0msk / Britnaa
+            return 4;
+        case 'OSA': // - Osageoj / Cleclair / Chris
+            return 5;
+        case 'DVD': // - David
+            return 6;
+        case 'DRE': // - Dredre / Andres
+            return 7;
+        case 'XAV': // - F.C.P.X.A.V.I. / Xav
+            return 8;
+        case 'FLD': // - Fieldday / Kenny
+            return 9;
+        case 'GRY': // - Gray / Gary
+            return 10;
+        case 'JMZ': // - Jmarutz /
+            return 11;
+        case 'KLE': // - Kelebrae /
+            return 12;
+        case 'NCR': // - Nerd Cruncher /
+            return 13;
+        case 'OLI': // - Oli.Online / Oli
+            return 14;
+        case 'XXX': // - Sebaceous / Evan
+            return 15;
+        case 'SKT': // - Skataroni / Scott
+            return 16;
+        case 'CHZ': // - SuperChenz /
+            return 17;
+        case 'SWG': // - Swaggerdragon / Lawson
+            return 18;
+        case 'VNL': // - Venilor / Cody
+            return 19;
+        case 'VFT': // - Veshift / Tim
+            return 20;
+        default:
+            return 86; // Return 86 for unmatched cases
+    }
+};
 </script>
 
 <template>
     <div class="meet" v-if="meets" v-for="match in meets[0].match">
-        {{ match.game_number }},{{ map[match.team_a[0].pcode] }},{{
-            map[match.team_a[1].pcode]
-        }},{{ map[match.team_b[0].pcode] }},{{ map[match.team_b[1].pcode] }}
+        {{ match.game_number }},{{ pcodeToBcode(match.team_a[0].pcode) }},{{
+            pcodeToBcode(match.team_a[1].pcode)
+        }},{{ pcodeToBcode(match.team_b[0].pcode) }},{{
+            pcodeToBcode(match.team_b[1].pcode)
+        }}
     </div>
 </template>
 
