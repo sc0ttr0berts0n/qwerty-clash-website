@@ -1,4 +1,4 @@
-import { array, object, string, z } from 'zod';
+import { array, literal, object, string, union, z } from 'zod';
 
 export const player = object({
     pcode: string().length(3),
@@ -8,7 +8,7 @@ export const player = object({
 });
 
 export const match = object({
-    match_status: string(),
+    match_status: union([literal('pending'), literal('completed')]),
     game_number: string(),
     team_a: array(player),
     team_b: array(player),

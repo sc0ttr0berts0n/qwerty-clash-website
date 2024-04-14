@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { queryCheckIns } from '../queries/checkin';
-import { singlePlayerCheckin } from '../queries/singlePlayerCheckin';
-import { discord } from '../store/discord';
-import { useDiscordCredentials } from '../composables/discordCredentials';
-import { useFormatDateTime } from '../composables/formatDateTime';
+import { queryCheckIns } from '../../queries/checkin';
+import { singlePlayerCheckin } from '../../queries/singlePlayerCheckin';
+import { discord } from '../../store/discord';
+import { useDiscordCredentials } from '../../composables/discordCredentials';
+import { useFormatDateTime } from '../../composables/formatDateTime';
+import CheckInSingle from './CheckInSingle.vue';
 import {
     CheckinSchema,
     MeetSchema,
     PlayerSchema,
     CheckinSingleSchema,
-} from '../schemas/checkin';
-import { useSendCheckIn } from '../composables/sendCheckIn';
+} from '../../schemas/checkin';
+import { useSendCheckIn } from '../../composables/sendCheckIn';
+import { FullScheduleSchema } from '../../schemas/fullSchedule';
+import { queryFullSchedule } from '../../queries/fullSchedule';
 
 type Checkin = {
     meet: MeetSchema;
@@ -25,17 +28,25 @@ type Checkin = {
 
 const checkins = ref<Checkin | null>(null);
 
-queryCheckIns().then((res: CheckinSchema) => {
+const schedule = ref<FullScheduleSchema[] | null>(null);
+queryFullSchedule().then((res) => {
+});
+
+Promise.all([
+    queryCheckIns(),
+    queryFullSchedule(),
+]).then(([checkinRes, scheduleRes]) => {
+    schedule.value = scheduleRes;
     const checkinMap = new Map(
-        res.checkins.map((el) => {
+        checkinRes.checkins.map((el) => {
             return [`${el.meet._ref}${el.discord_id}`, el];
         })
     );
 
-    checkins.value = res.meets.map((meet) => {
+    checkins.value = checkinRes.meets.map((meet) => {
         return {
             meet,
-            players: res.players.map((player) => {
+            players: checkinRes.players.map((player) => {
                 return {
                     ...player,
                     checkinStatus:
@@ -49,6 +60,8 @@ queryCheckIns().then((res: CheckinSchema) => {
         };
     });
 });
+
+
 
 const availEmoji = computed(() => {
     return (avail: CheckinSingleSchema['checkin_status']) => {
@@ -137,6 +150,7 @@ watch(discord, async (newDiscord) => {
         existingMeet.userStatus = pcheck.checkin_status;
     });
 });
+
 </script>
 
 <template>
@@ -151,81 +165,7 @@ watch(discord, async (newDiscord) => {
     </div>
     <h2>Availability Overview</h2>
     <div class="checkin-wrapper">
-        <div
-            class="checkin"
-            v-for="checkin in checkins"
-            :key="checkin.meet._id"
-        >
-            <div class="header">
-                <h3>{{ useFormatDateTime(checkin.meet.meet_time) }}</h3>
-                <div class="your-status">
-                    <div class="logged-in" v-show="discord.accessToken">
-                        <div class="label">Your Status:</div>
-                        <select
-                            name="status"
-                            class="status-select"
-                            v-model="checkin.userStatus"
-                            @change="
-                                proxySendCheckIn(
-                                    checkin.meet._id,
-                                    checkin.userStatus
-                                )
-                            "
-                        >
-                            <option
-                                v-for="option in options.filter((opt) => {
-                                    return isOptionAvailable(
-                                        opt.value,
-                                        checkin.meet.meet_time
-                                    );
-                                })"
-                                :value="option.value"
-                            >
-                                {{ option.text }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="logged-out" v-show="!discord.accessToken">
-                        <div class="label">Login to set status</div>
-                        <button @click="useDiscordCredentials(false)">
-                            Discord
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="check-in-note">
-                <p v-if="isCheckinAvailable(checkin.meet.meet_time)">
-                    Check-in is now open!
-                </p>
-                <p v-else>
-                    Please share your tentative availability now and stop back
-                    later. Check-in begins
-                    {{ checkinStartTime(checkin.meet.meet_time) }}.
-                </p>
-            </div>
-            <div class="players">
-                <div
-                    class="player"
-                    v-for="player in checkin.players"
-                    :key="player.name"
-                >
-                    <img
-                        class="avatar"
-                        :src="player.avatar.url"
-                        alt=""
-                        width="500"
-                        height="500"
-                    />
-                    <div class="name">
-                        <div class="full-name">{{ player.name }}</div>
-                        <div class="pcode-name">{{ player.pcode }}</div>
-                    </div>
-                    <div class="availability">
-                        {{ availEmoji(player.checkinStatus) }}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <CheckInSingle v-for="checkin in checkins" :checkin="checkin" :schedule="schedule"/>
     </div>
 </template>
 
