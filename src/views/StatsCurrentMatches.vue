@@ -61,9 +61,9 @@ const pcodeToBcode = (pcode: any) => {
 
 <template>
     <div class="meet" v-if="meets" v-for="match in meets[0].match">
-        {{ match.game_number }},{{ pcodeToBcode(match.team_a[0].pcode) }},{{
+        {{ match.game_number }} {{ pcodeToBcode(match.team_a[0].pcode) }}-{{
             pcodeToBcode(match.team_a[1].pcode)
-        }},{{ pcodeToBcode(match.team_b[0].pcode) }},{{
+        }}-{{ pcodeToBcode(match.team_b[0].pcode) }}-{{
             pcodeToBcode(match.team_b[1].pcode)
         }}
     </div>
