@@ -11,7 +11,6 @@ const meets = ref<MeetSchema[]>();
 queryMeet().then((res) => {
     meets.value = res;
 });
-
 </script>
 
 <template>
@@ -19,16 +18,12 @@ queryMeet().then((res) => {
 </template>
 
 <style lang="scss">
-.twitch.leaderboard{
-
-    #app {
-        background: #00ff00;
-    }
+.twitch.leaderboard {
     .nav-container {
-        display: none!important;
+        display: none !important;
     }
     footer {
-        display: none!important;
+        display: none !important;
     }
 }
 </style>
