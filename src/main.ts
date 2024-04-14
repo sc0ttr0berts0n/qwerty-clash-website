@@ -14,6 +14,7 @@ import CheckInView from './views/CheckInView.vue';
 import DiscordAuthView from './views/DiscordAuthView.vue';
 import TwitchLeaderboardView from './views/TwitchLeaderboardView.vue';
 import TwitchUpcomingGames from './views/TwitchUpcomingGamesView.vue';
+import StatsCurrentMatches from './views/StatsCurrentMatches.vue';
 
 const routes = [
     { path: '/', component: LeaderboardView },
@@ -23,6 +24,7 @@ const routes = [
     { path: '/check-in', component: CheckInView },
     { path: '/twitch-leaderboard', component: TwitchLeaderboardView },
     { path: '/twitch-upcoming-games', component: TwitchUpcomingGames },
+    { path: '/stats-current-matches', component: StatsCurrentMatches },
     {
         path: '/auth/discord',
         component: DiscordAuthView,
