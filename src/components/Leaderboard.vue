@@ -71,8 +71,8 @@ queryPlayerRecords()
 </script>
 
 <template>
+    <h2>Overall Standings</h2>
     <div class="leaderboard" v-if="data">
-        <h2>Top {{ Math.floor(data.length / 2) }}</h2>
         <PlayerBar
             v-for="(entry, index) in data.slice(0, Math.floor(data.length / 2))"
             :key="entry.pcode"
@@ -84,7 +84,6 @@ queryPlayerRecords()
             :url="entry.player.avatar?.url"
             :color="entry.player.color"
         />
-        <h2>Bottom {{ Math.floor(data.length / 2) }}</h2>
         <PlayerBar
             v-for="(entry, index) in data.slice(Math.floor(data.length / 2))"
             :key="entry.pcode"
@@ -114,7 +113,7 @@ queryPlayerRecords()
         grid-auto-flow: column;
         grid-auto-columns: 1fr;
         grid-template-columns: repeat(2, min-content);
-        grid-template-rows: min-content repeat(10, min-content);
+        grid-template-rows: repeat(10, min-content);
         gap: 0.5rem 1rem;
     }
 }

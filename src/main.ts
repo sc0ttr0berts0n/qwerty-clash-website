@@ -12,6 +12,8 @@ import MeetView from './views/MeetView.vue';
 import FullSchedule from './views/FullScheduleView.vue';
 import CheckInView from './views/CheckInView.vue';
 import DiscordAuthView from './views/DiscordAuthView.vue';
+import TwitchLeaderboardView from './views/TwitchLeaderboardView.vue';
+import TwitchUpcomingGames from './views/TwitchUpcomingGamesView.vue';
 
 const routes = [
     { path: '/', component: LeaderboardView },
@@ -19,6 +21,8 @@ const routes = [
     { path: '/game-nights', component: MeetView },
     { path: '/full-schedule', component: FullSchedule },
     { path: '/check-in', component: CheckInView },
+    { path: '/twitch-leaderboard', component: TwitchLeaderboardView },
+    { path: '/twitch-upcoming-games', component: TwitchUpcomingGames },
     {
         path: '/auth/discord',
         component: DiscordAuthView,

@@ -20,7 +20,7 @@ discord.avatar = discordCreds?.avatar;
         <RouterView />
     </main>
     <footer>
-        <a href="https://qwertycast.com/">QWERTYCAST</a> MADE THIS
+        <a href="http://qwertycast.com/">QWERTYCAST</a> MADE THIS
         <span class="version">(v{{ pjson.version }})</span>
     </footer>
 </template>
@@ -69,10 +69,11 @@ footer {
     background-repeat: no-repeat;
     background-size: 400%;
     background-position: 20% 130%;
-    padding: 1rem;
+    padding: 0.25rem;
     position: relative;
     border-radius: 1rem;
     margin: 0 1rem 1rem;
+    margin-bottom: calc(env(safe-area-inset-bottom) + 1rem);
     box-shadow: 0.25rem 0.25rem 0 0 black;
 
     &::after {
