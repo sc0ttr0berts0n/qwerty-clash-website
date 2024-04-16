@@ -1,4 +1,13 @@
 <script setup lang="ts">
+enum ETieBreakers {
+    WIN_RATE,
+    LOSS,
+    WIN,
+    HEAD_TO_HEAD,
+    KOS,
+    TIE,
+}
+
 withDefaults(
     defineProps<{
         position: number;
@@ -8,6 +17,8 @@ withDefaults(
         losses: number;
         color: string;
         url: string;
+        kos: number;
+        tieBreakers: ETieBreakers;
     }>(),
     {
         name: 'unknown',
@@ -15,6 +26,23 @@ withDefaults(
         color: '#282828',
     }
 );
+
+const tieBreakerLetter = (tb: ETieBreakers) => {
+    switch (tb) {
+        case ETieBreakers.WIN_RATE:
+            return '%';
+        case ETieBreakers.WIN:
+            return 'W';
+        case ETieBreakers.LOSS:
+            return 'L';
+        case ETieBreakers.HEAD_TO_HEAD:
+            return 'H';
+        case ETieBreakers.KOS:
+            return 'K';
+        default:
+            return '?';
+    }
+};
 </script>
 
 <template>
@@ -23,6 +51,10 @@ withDefaults(
         <div class="position" v-if="position">{{ position }}</div>
         <div class="name">{{ name }}</div>
         <div class="pcode">{{ pcode }}</div>
+        <div v-if="tieBreakers > 0" class="token">
+            <div class="token-element">{{ tieBreakerLetter(tieBreakers) }}</div>
+            <div class="token-helper">Tie Broken by reason</div>
+        </div>
         <div class="record">{{ wins }}&ndash;{{ losses }}</div>
     </div>
 </template>
@@ -66,6 +98,26 @@ withDefaults(
 }
 .avatar {
     border-right: 2px solid white;
+}
+.token {
+    align-self: center;
+    width: 2ch;
+    height: 2ch;
+    line-height: 1;
+    text-align: center;
+    background-color: white;
+    border-radius: 50%;
+    color: black;
+    text-shadow: none;
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 1ch;
+    box-shadow: 0.1875rem 0.1875rem 0 0 black;
+}
+.token-helper {
+    background-color: white;
+    position: absolute;
+    z-index: 100;
 }
 .name {
     position: relative;

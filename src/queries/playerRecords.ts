@@ -7,10 +7,15 @@ const query = `
     _type== "statline" &&
     match->season->number == '2'
   ] {
-    player->{
-      pcode,
-    },
-    outcome,
+      player->{
+        pcode,
+      },
+      outcome,
+      match->{
+        team_a[]->{pcode},
+        team_b[]->{pcode}
+      },
+      kos
     },
     "players": *[_type == "player"] {
       pcode,
