@@ -7,6 +7,12 @@ import {
     createWebHistory,
 } from 'vue-router';
 
+// Vuetify
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+
 import LeaderboardView from './views/LeaderboardView.vue';
 import MeetView from './views/MeetView.vue';
 import FullSchedule from './views/FullScheduleView.vue';
@@ -36,4 +42,9 @@ const router = createRouter({
     routes,
 });
 
-createApp(App).use(router).mount('#app');
+const vuetify = createVuetify({
+    components,
+    directives,
+});
+
+createApp(App).use(router).use(vuetify).mount('#app');

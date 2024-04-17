@@ -52,8 +52,18 @@ const tieBreakerLetter = (tb: ETieBreakers) => {
         <div class="name">{{ name }}</div>
         <div class="pcode">{{ pcode }}</div>
         <div v-if="tieBreakers > 0" class="token">
-            <div class="token-element">{{ tieBreakerLetter(tieBreakers) }}</div>
-            <div class="token-helper">Tie Broken by reason</div>
+            <div class="token-element">
+                {{ tieBreakerLetter(tieBreakers) }}
+                <!-- <v-tooltip activator="parent" text="Tie Broken" location="right"
+                    >Blah</v-tooltip
+                > -->
+            </div>
+            <!-- <v-tooltip text="Tooltip">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props">Tooltip</v-btn>
+                </template>
+            </v-tooltip> -->
+            <!-- <div class="token-helper">Tie Broken by reason</div> -->
         </div>
         <div class="record">{{ wins }}&ndash;{{ losses }}</div>
     </div>
@@ -94,6 +104,7 @@ const tieBreakerLetter = (tb: ETieBreakers) => {
         display: block;
         border-radius: 0.25rem;
         border: 2px solid white;
+        pointer-events: none;
     }
 }
 .avatar {
@@ -114,10 +125,10 @@ const tieBreakerLetter = (tb: ETieBreakers) => {
     margin: 1ch;
     box-shadow: 0.1875rem 0.1875rem 0 0 black;
 }
-.token-helper {
-    background-color: white;
-    position: absolute;
-    z-index: 100;
+.v-tooltip > .v-overlay__content {
+    background-color: white !important;
+    // position: absolute;
+    // z-index: 100;
 }
 .name {
     position: relative;
