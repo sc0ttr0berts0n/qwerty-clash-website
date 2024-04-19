@@ -6,7 +6,7 @@ import { LeaderboardSchema } from '../schemas/leaderboard';
 import { RecordData } from '../composables/generateLeaderboard';
 import { useGenerateLeaderboard } from '../composables/generateLeaderboard';
 
-document.body.classList.add('stats', 'current-matches');
+document.body.classList.add('stats', 'power-rankings');
 
 const stats = array(
     object({
@@ -430,15 +430,17 @@ useSanityClient
     </div>
 </template>
 
-<style lang="scss">
-.player {
-    margin-top: 3rem;
-    font-family: monospace;
-    line-height: 1.1;
-}
-.key {
-    &::after {
-        content: ': ';
+<style scoped lang="scss">
+.power-rankings {
+    .player {
+        margin-top: 3rem;
+        font-family: monospace;
+        line-height: 1.1;
+    }
+    .key {
+        &::after {
+            content: ': ';
+        }
     }
 }
 </style>

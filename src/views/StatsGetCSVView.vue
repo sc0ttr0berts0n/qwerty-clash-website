@@ -45,7 +45,7 @@ const hitAPI = async () => {
     <button @click="hitAPI()">Get CSV</button>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .player {
     margin-top: 3rem;
     font-family: monospace;

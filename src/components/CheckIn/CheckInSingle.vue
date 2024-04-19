@@ -383,6 +383,7 @@ pre {
 }
 
 .matches-wrapper {
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
