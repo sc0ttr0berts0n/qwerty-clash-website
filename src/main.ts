@@ -21,6 +21,8 @@ import DiscordAuthView from './views/DiscordAuthView.vue';
 import TwitchLeaderboardView from './views/TwitchLeaderboardView.vue';
 import TwitchUpcomingGames from './views/TwitchUpcomingGamesView.vue';
 import StatsCurrentMatches from './views/StatsCurrentMatches.vue';
+import StatsPowerRankings from './views/StatsPowerRankingsView.vue';
+import StatsGetCSV from './views/StatsGetCSVView.vue';
 
 const routes = [
     { path: '/', component: LeaderboardView },
@@ -31,6 +33,8 @@ const routes = [
     { path: '/twitch-leaderboard', component: TwitchLeaderboardView },
     { path: '/twitch-upcoming-games', component: TwitchUpcomingGames },
     { path: '/stats-current-matches', component: StatsCurrentMatches },
+    { path: '/stats-power-rankings', component: StatsPowerRankings },
+    { path: '/stats-get-csv', component: StatsGetCSV },
     {
         path: '/auth/discord',
         component: DiscordAuthView,
