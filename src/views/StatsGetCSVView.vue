@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useSanityClient } from '../composables/sanityClient';
-import { array, literal, number, object, string, union, z } from 'zod';
-import { LeaderboardSchema } from '../schemas/leaderboard';
-import { RecordData } from '../composables/generateLeaderboard';
-import { useGenerateLeaderboard } from '../composables/generateLeaderboard';
-
 document.body.classList.add('stats', 'current-matches');
 
 const hitAPI = async () => {
