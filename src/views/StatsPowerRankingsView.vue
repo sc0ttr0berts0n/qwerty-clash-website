@@ -189,6 +189,7 @@ export type StatsSchema = z.infer<typeof stats>;
 const statMap = new Map<string, IStats>();
 
 const playerInfo = ref<any>('lol');
+const overalInfo = ref<any>('lol');
 
 const meetLeaderboardMap = new Map<number, RecordData>();
 
@@ -355,6 +356,49 @@ useSanityClient
                         };
                     }
                 );
+
+                const max = (key: string) => {
+                    return Math.max(
+                        ...playerInfo.value.map((p: any) => p[key])
+                    );
+                };
+
+                const min = (key: string) => {
+                    return Math.min(
+                        ...playerInfo.value.map((p: any) => p[key])
+                    );
+                };
+
+                const avg = (key: string) => {
+                    const count = playerInfo.value.length;
+                    const sum = playerInfo.value.reduce(
+                        (acc: number, p: any) => {
+                            return acc + p[key];
+                        },
+                        0
+                    );
+                    return sum / count;
+                };
+                overalInfo.value = {
+                    ranks: cumulative
+                        .at(-1)
+                        ?.map((p) => pcodeToBcode(p.player.pcode)),
+                    lowKO: min('koAverage'),
+                    highKO: max('koAverage'),
+                    avgKO: avg('koAverage'),
+                    lowFalls: min('fallAverage'),
+                    highFalls: max('fallAverage'),
+                    avgFalls: avg('fallAverage'),
+                    lowDmgGiven: min('dmgGivenAverage'),
+                    highDmgGiven: max('dmgGivenAverage'),
+                    avgDmgGiven: avg('dmgGivenAverage'),
+                    lowDmgTaken: min('dmgTakenAverage'),
+                    highDmgTaken: max('dmgTakenAverage'),
+                    avgDmgTaken: avg('dmgTakenAverage'),
+                    lowKDR: min('kdr'),
+                    highKDR: max('kdr'),
+                    avgKDR: avg('kdr'),
+                };
             });
         });
     });
@@ -362,70 +406,163 @@ useSanityClient
 
 <template>
     <button @click="showKeys = !showKeys">hide keys</button>
-    <div class="player" v-for="p in playerInfo">
-        <div class="entry">
-            <span class="key" v-if="showKeys">PCode</span>
-            <span class="value">{{ p.pcode }}</span>
+    <div class="fields">
+        <div class="player">
+            <div class="entry" v-for="(el, index) in overalInfo.ranks">
+                <span class="key" v-if="showKeys"
+                    >POS{{ (index + 1).toString().padStart(2, '0') }}</span
+                >
+                <span class="value">{{ el }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Lowest KO</span>
+                <span class="value">{{ overalInfo.lowKO?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Highest KO</span>
+                <span class="value">{{ overalInfo.highKO?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Lowest Falls</span>
+                <span class="value"
+                    >{{ overalInfo.lowFalls?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Highest Falls</span>
+                <span class="value"
+                    >{{ overalInfo.highFalls?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Lowest DMG+</span>
+                <span class="value"
+                    >{{ overalInfo.lowDmgGiven?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Highest DMG+</span>
+                <span class="value"
+                    >{{ overalInfo.highDmgGiven?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Lowest DMG-</span>
+                <span class="value"
+                    >{{ overalInfo.lowDmgTaken?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Highest DMG-</span>
+                <span class="value"
+                    >{{ overalInfo.highDmgTaken?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Lowest KDR</span>
+                <span class="value">{{ overalInfo.lowKDR?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Highest KDR</span>
+                <span class="value">{{ overalInfo.highKDR?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">AVG KO</span>
+                <span class="value">{{ overalInfo.avgKO?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">AVG Falls</span>
+                <span class="value"
+                    >{{ overalInfo.avgFalls?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">AVG DMG+</span>
+                <span class="value"
+                    >{{ overalInfo.avgDmgGiven?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">AVG DMG-</span>
+                <span class="value"
+                    >{{ overalInfo.avgDmgTaken?.toFixed(2) }},</span
+                >
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">AVG KDR</span>
+                <span class="value">{{ overalInfo.avgKDR?.toFixed(2) }}</span>
+            </div>
         </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">Current Power Ranking</span>
-            <span class="value">{{ p.currentPowerRanking }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">Wins</span>
-            <span class="value">{{ p.wins }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">Losses</span>
-            <span class="value">{{ p.losses }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">KO Average</span>
-            <span class="value">{{ p.koAverage?.toFixed(2) }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">Fall Average</span>
-            <span class="value">{{ p.fallAverage.toFixed(2) }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">KDR</span>
-            <span class="value">{{ p.kdr.toFixed(2) }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">DMG+ Average</span>
-            <span class="value">{{ p.dmgGivenAverage.toFixed(2) }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">DMG- Average</span>
-            <span class="value">{{ p.dmgTakenAverage.toFixed(2) }}</span>
-        </div>
-        <div
-            class="entry"
-            v-for="char in [...p.charactersUsed, ...new Array(5).fill(0)].slice(
-                0,
-                5
-            )"
-        >
-            <span class="key" v-if="showKeys">Most Used</span>
-            <span v-if="char.name && showKeys" class="detail"
-                >({{ char.name }}, {{ char.percent.toFixed(2) * 100 }}%)</span
+        <div class="player" v-for="p in playerInfo">
+            <div class="entry">
+                <span class="key" v-if="showKeys">PCode</span>
+                <span class="value">{{ p.pcode }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Current Power Ranking</span>
+                <span class="value">{{ p.currentPowerRanking }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Wins</span>
+                <span class="value">{{ p.wins }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Losses</span>
+                <span class="value">{{ p.losses }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">KO Average</span>
+                <span class="value">{{ p.koAverage?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Fall Average</span>
+                <span class="value">{{ p.fallAverage?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">KDR</span>
+                <span class="value">{{ p.kdr?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">DMG+ Average</span>
+                <span class="value">{{ p.dmgGivenAverage?.toFixed(2) }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">DMG- Average</span>
+                <span class="value">{{ p.dmgTakenAverage?.toFixed(2) }},</span>
+            </div>
+            <div
+                class="entry"
+                v-for="char in [
+                    ...p.charactersUsed,
+                    ...new Array(5).fill(0),
+                ].slice(0, 5)"
             >
-            <span class="value">{{ char.index ?? 0 }}</span>
-        </div>
-        <div class="entry">
-            <span class="key" v-if="showKeys">Player Index</span>
-            <span class="detail" v-if="showKeys">({{ p.pcode }})</span>
-            <span class="value">{{ p.playerIndex }}</span>
-        </div>
-        <div
-            class="entry"
-            v-for="(rank, index) in [
-                ...p.cumulativeRank,
-                ...new Array(10).fill(0),
-            ].slice(0, 10)"
-        >
-            <span class="key" v-if="showKeys">Day {{ index + 1 }} Rank</span>
-            <span class="value">{{ rank }}</span>
+                <span class="key" v-if="showKeys">Most Used</span>
+                <span v-if="char.name && showKeys" class="detail"
+                    >({{ char.name }},
+                    {{ char.percent.toFixed(2) * 100 }}%)</span
+                >
+                <span class="value">{{ char.index ?? 0 }},</span>
+            </div>
+            <div class="entry">
+                <span class="key" v-if="showKeys">Player Index</span>
+                <span class="detail" v-if="showKeys">({{ p.pcode }})</span>
+                <span class="value">{{ p.playerIndex }},</span>
+            </div>
+            <div
+                class="entry"
+                v-for="(rank, index) in [
+                    ...p.cumulativeRank,
+                    ...new Array(10).fill(0),
+                ].slice(0, 10)"
+            >
+                <span class="key" v-if="showKeys"
+                    >Day {{ index + 1 }} Rank</span
+                >
+                <span class="value"
+                    >{{ rank }}{{ index === 9 ? '' : ',' }}</span
+                >
+            </div>
         </div>
     </div>
 </template>
@@ -433,7 +570,7 @@ useSanityClient
 <style scoped lang="scss">
 .power-rankings {
     .player {
-        margin-top: 3rem;
+        margin-top: 1rem;
         font-family: monospace;
         line-height: 1.1;
     }
@@ -441,6 +578,10 @@ useSanityClient
         &::after {
             content: ': ';
         }
+    }
+
+    .entry {
+        display: inline;
     }
 }
 </style>
