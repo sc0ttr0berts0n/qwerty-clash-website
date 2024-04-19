@@ -74,7 +74,7 @@ const pcodeToBcode = (pcode: any) => {
             return 13;
         case 'OLI': // - Oli.Online / Oli
             return 14;
-        case 'XXX': // - Sebaceous / Evan
+        case 'CPY': // - Sebaceous / Evan
             return 15;
         case 'SKT': // - Skataroni / Scott
             return 16;
@@ -87,7 +87,7 @@ const pcodeToBcode = (pcode: any) => {
         case 'VFT': // - Veshift / Tim
             return 20;
         default:
-            return 86; // Return 86 for unmatched cases
+            return '??'; // Return 86 for unmatched cases
     }
 };
 
@@ -408,6 +408,9 @@ useSanityClient
     <button @click="showKeys = !showKeys">hide keys</button>
     <div class="fields">
         <div class="player">
+            <div class="entry">
+                <span class="value">LEAGUE,</span>
+            </div>
             <div class="entry" v-for="(el, index) in overalInfo.ranks">
                 <span class="key" v-if="showKeys"
                     >POS{{ (index + 1).toString().padStart(2, '0') }}</span
