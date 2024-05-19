@@ -1,12 +1,5 @@
 <script setup lang="ts">
-enum ETieBreakers {
-    WIN_RATE,
-    LOSS,
-    WIN,
-    HEAD_TO_HEAD,
-    KOS,
-    TIE,
-}
+import { ETieBreakers } from '../composables/generateLeaderboard';
 
 withDefaults(
     defineProps<{
@@ -35,12 +28,14 @@ const tieBreakerLetter = (tb: ETieBreakers) => {
             return 'W';
         case ETieBreakers.LOSS:
             return 'L';
-        case ETieBreakers.HEAD_TO_HEAD:
+        case ETieBreakers.HEAD_TO_HEAD_WINS:
             return 'H';
         case ETieBreakers.KOS:
             return 'K';
+        case ETieBreakers.HEAD_TO_HEAD_KOS:
+            return 'HK';
         default:
-            return '?';
+            return 'T';
     }
 };
 </script>
@@ -111,17 +106,19 @@ const tieBreakerLetter = (tb: ETieBreakers) => {
     border-right: 2px solid white;
 }
 .token {
+    display: flex;
     align-self: center;
-    width: 2ch;
-    height: 2ch;
+    justify-content: center;
+    align-items: center;
+    width: 2.5ch;
+    height: 2.5ch;
     line-height: 1;
-    text-align: center;
     background-color: white;
     border-radius: 50%;
     color: black;
     text-shadow: none;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.875rem;
     margin: 1ch;
     box-shadow: 0.1875rem 0.1875rem 0 0 black;
 }

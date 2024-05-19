@@ -1,3 +1,4 @@
+import { player } from './../schemas/components';
 import { PlayerSchema } from '../schemas/components';
 import { LeaderboardSchema, StatlineSchema } from '../schemas/leaderboard';
 
@@ -9,12 +10,13 @@ export interface RecordData {
     tieBreaker: ETieBreakers;
 }
 
-enum ETieBreakers {
+export enum ETieBreakers {
     WIN_RATE,
     LOSS,
     WIN,
-    HEAD_TO_HEAD,
+    HEAD_TO_HEAD_WINS,
     KOS,
+    HEAD_TO_HEAD_KOS,
     TIE,
 }
 
@@ -66,64 +68,103 @@ export const useGenerateLeaderboard = (res: LeaderboardSchema) => {
             const winRate = bWinRate - aWinRate;
             const kos = b.kos - a.kos;
 
+            // Tie Breaker 1: win rate
             if (winRate !== 0) {
                 return winRate;
             }
+
+            // Tie Breaker 2: least losses
             const losses = a.loss - b.loss;
             if (losses !== 0) {
                 (losses > 0 ? b : a).tieBreaker = ETieBreakers.LOSS;
                 return losses;
             }
+
+            // Tie Breaker 3: most wins
             const wins = b.win - a.win;
             if (wins !== 0) {
                 (wins > 0 ? b : a).tieBreaker = ETieBreakers.WIN;
                 return wins;
             }
-            if (opts?.miniseason) {
-                return 0;
+
+            // when calcing miniseasons, exit here
+            if (opts?.miniseason) return 0;
+
+            // Tie Breaker 4: Head to Head Mini Season Wins
+            const tiedPlayers = players.filter(
+                (player) => player.win === a.win && player.loss === a.loss
+            );
+            const headToHead = _sortByMiniSeasonWins(
+                tiedPlayers,
+                a.player.pcode,
+                b.player.pcode
+            );
+            if (headToHead.win !== 0) {
+                (headToHead.win > 0 ? b : a).tieBreaker =
+                    ETieBreakers.HEAD_TO_HEAD_WINS;
+                return headToHead.win;
             }
-            // if (b.player.pcode === 'OLI' && a.player.pcode === 'AMR') {
-            //     debugger;
-            // }
-            const headToHead = _sortByMiniSeasonWins(a, b);
-            if (headToHead !== 0) {
-                (headToHead > 0 ? b : a).tieBreaker = ETieBreakers.HEAD_TO_HEAD;
-                return headToHead;
-            }
+
+            // Tie Breaker 5: KOs
             if (kos !== 0) {
                 (kos > 0 ? b : a).tieBreaker = ETieBreakers.KOS;
                 return kos;
             }
 
+            // Tie Breaker 6: Head to Head Miniseason KOs
+            if (headToHead?.ko !== 0) {
+                (headToHead?.ko > 0 ? b : a).tieBreaker =
+                    ETieBreakers.HEAD_TO_HEAD_KOS;
+                console.log(headToHead);
+
+                return headToHead?.ko;
+            }
+
             // failsafe backup
+            if (
+                (a.player.pcode === 'SKT' && b.player.pcode === 'LEE') ||
+                (a.player.pcode === 'LEE' && b.player.pcode === 'SKT')
+            ) {
+                // debugger;
+            }
+
+            // Tied
             a.tieBreaker = ETieBreakers.TIE;
             b.tieBreaker = ETieBreakers.TIE;
             return 0;
         });
     };
 
-    const _sortByMiniSeasonWins = (a: RecordData, b: RecordData): number => {
-        const pcodes = [a.player.pcode, b.player.pcode];
+    const _sortByMiniSeasonWins = (
+        tiedPlayers: RecordData[],
+        aPCode: string,
+        bPCode: string
+    ): { win: number; ko: number } => {
+        const tiedPCodes = tiedPlayers.map((el) => el.player.pcode);
         const miniseason = res.statlines.filter((statline) => {
-            const player = statline.player.pcode;
+            const statlinePlayer = statline.player.pcode;
 
             // guard if not from a/b perspective
-            if (!pcodes.includes(player)) return false;
+            if (!tiedPCodes.includes(statlinePlayer)) return false;
+            if (statline.outcome !== 'win') return false;
 
-            const other = pcodes.find(
+            const others = tiedPCodes.filter(
                 (code) => code !== statline.player.pcode
             )!;
-            const team_a = statline.match.team_a.map((p) => p.pcode);
-            const team_b = statline.match.team_b.map((p) => p.pcode);
-            if (team_a.includes(player)) {
-                return team_b.includes(other);
-            } else {
-                return team_a.includes(other);
-            }
+
+            return others.some((other) => {
+                const team_aPCodes = statline.match.team_a.map((p) => p.pcode);
+                const team_bPCodes = statline.match.team_b.map((p) => p.pcode);
+                if (team_aPCodes.includes(statlinePlayer)) {
+                    return team_bPCodes.includes(other);
+                } else {
+                    return team_aPCodes.includes(other);
+                }
+            });
         });
 
         const miniseasonPlayers = res.players.filter((p) =>
-            pcodes.includes(p.pcode)
+            tiedPCodes.includes(p.pcode)
         );
         const winLossData = _statlinesToWinLossData(
             miniseason,
@@ -134,11 +175,33 @@ export const useGenerateLeaderboard = (res: LeaderboardSchema) => {
             miniseason: true,
         });
 
-        // if no wins at all, return 0
-        if (miniSeasonResults.every((res) => res.win === 0)) return 0;
+        const aResults = miniSeasonResults.find(
+            (result) => result.player.pcode === aPCode
+        );
+        const bResults = miniSeasonResults.find(
+            (result) => result.player.pcode === bPCode
+        );
 
-        // otherwise top player wins
-        return miniSeasonResults[0].player.pcode === a.player.pcode ? -1 : 1;
+        // if no wins for a or b, return 0
+        if (!aResults || !bResults) {
+            return { win: 0, ko: 0 };
+        }
+
+        // if no wins at all, return 0
+        if (miniSeasonResults.every((res) => res.win === 0)) {
+            return { win: 0, ko: 0 };
+        }
+        console.log(JSON.stringify(miniSeasonResults, null, 2));
+
+        // if (
+        //     (aPCode === 'SKT' || aPCode === 'LEE') &&
+        //     (bPCode === 'SKT' || bPCode === 'LEE')
+        // ) {
+        //     debugger;
+        // }
+        const win = bResults.win - aResults.win;
+        const ko = bResults.kos - aResults.kos;
+        return { win, ko };
     };
 
     const winLossData = _statlinesToWinLossData(res.statlines, res.players);
